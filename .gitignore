@@ -1,0 +1,11 @@
+# ignore generated object files
+*.o
+
+# ignore generated shared libraries
+*.so
+*.so.*
+
+# ignore generated binaries
+examples_RPi/RF24Mesh_Example
+examples_RPi/RF24Mesh_Example_Master
+examples_RPi/ncurses/RF24Mesh_Ncurses_Master
