@@ -1,17 +1,15 @@
- 
- 
- /** RF24Mesh_Example.cpp by TMRh20
-  * 
-  * Note: This sketch only functions on -RPi-
-  *
-  * This example sketch shows how to manually configure a node via RF24Mesh, and send data to the
-  * master node.
-  * In this sketch, the nodes will refresh their network address as soon as a single write fails. This allows the
-  * nodes to change position in relation to each other and the master node.
-  *
-  */
-  
-#include "RF24Mesh/RF24Mesh.h"  
+/** RF24Mesh_Example.cpp by TMRh20
+ *
+ * Note: This sketch only functions on -RPi-
+ *
+ * This example sketch shows how to manually configure a node via RF24Mesh, and send data to the
+ * master node.
+ * In this sketch, the nodes will refresh their network address as soon as a single write fails. This allows the
+ * nodes to change position in relation to each other and the master node.
+ *
+ */
+
+#include "RF24Mesh/RF24Mesh.h"
 #include <RF24/RF24.h>
 #include <RF24Network/RF24Network.h>
 
