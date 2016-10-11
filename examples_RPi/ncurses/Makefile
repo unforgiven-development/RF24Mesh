@@ -8,17 +8,46 @@
 # Description:
 # ------------
 # use make all and make install to install the examples
-# You can change the install directory by editing the prefix line
+# You can change the install directory by editing the PREFIX line
 #
-prefix := /usr/local
 
-# Assuming Raspberry Pi (original) / Raspberry Pi Zero
-CCFLAGS=-O2 -mfpu=vfp -mfloat-abi=hard -march=armv6zk -mtune=arm1176jzf-s -std=c++0x -Wall
-# -- Check for Raspberry Pi 2+ --
-ifeq "$(shell uname -m)" "armv7l"
-# Set $CCFLAGS for Raspberry Pi 2+
-CCFLAGS=-march=armv7-a -mtune=cortex-a7 -mfpu=neon-vfpv4 -mfloat-abi=hard -O2 -Wall -pthread -pipe -fstack-protector --param=ssp-buffer-size=4 -std=c++0x
+REL_RF24_MAKEFILE_INC="../../../RF24/Makefile.inc"
+RF24_MAKEFILE_INC=$(shell echo "$$(cd "$$(dirname "$(REL_RF24_MAKEFILE_INC)")"; pwd)/$$(basename "$(REL_RF24_MAKEFILE_INC)")")
+
+ifneq ("$(wildcard $(RF24_MAKEFILE_INC))","")
+RF24_MAKEFILE_INC_EXISTS=1
+else
+RF24_MAKEFILE_INC_EXISTS=0
 endif
+
+ifeq ($(RF24_MAKEFILE_INC_EXISTS),1)
+# $(RF24_MAKEFILE_INC) DEFINES:
+# - CFLAGS
+# - PREFIX
+# - CC
+# - CXX
+# - LDCONFIG
+# - LIB_DIR
+# - EXAMPLES_DIR
+include $(RF24_MAKEFILE_INC)
+else
+PREFIX=/usr/local
+LIB_DIR=$(PREFIX)/lib
+EXAMPLES_DIR=$(PREFIX)/bin
+CC=gcc
+CXX=g++
+LDCONFIG=ldconfig
+# CFLAGS #
+## Assuming Raspberry Pi (original) / Raspberry Pi Zero ##
+CFLAGS=-march=armv6zk -mtune=arm1176jzf-s -mfpu=vfp -mfloat-abi=hard -O2 -pthread -pipe -fstack-protector --param=ssp-buffer-size=4 -std=c++0x
+## -- Check for Raspberry Pi 2+ -- ##
+ifeq "$(shell uname -m)" "armv7l"
+## Set CFLAGS for Raspberry Pi 2+ ##
+CFLAGS=-march=armv7-a -mtune=cortex-a7 -mfpu=neon-vfpv4 -mfloat-abi=hard -O2 -pthread -pipe -fstack-protector --param=ssp-buffer-size=4 -std=c++0x
+endif
+
+endif
+# (end of RF24_MAKEFILE_INC_EXISTS)
 
 # define all programs
 PROGRAMS = RF24Mesh_Ncurses_Master
@@ -27,16 +56,20 @@ SOURCES = ${PROGRAMS2:=.cpp}
 all: ${PROGRAMS}
 
 ${PROGRAMS}: ${SOURCES}
-	g++ ${CCFLAGS} -Wall -I../ -lncurses -lrf24-bcm -lrf24network -lrf24mesh $@.cpp -o $@
+	${CXX} ${CFLAGS} -Wall -I../ -lncurses -lrf24-bcm -lrf24network -lrf24mesh $@.cpp -o $@
 
 clean:
 	rm -rf $(PROGRAMS)
 	
-install: all
-	test -d $(prefix) || mkdir $(prefix)
-	test -d $(prefix)/bin || mkdir $(prefix)/bin
+install:
+	test -d $(PREFIX) || mkdir $(PREFIX)
+	test -d $(PREFIX)/bin || mkdir $(PREFIX)/bin
 	for prog in $(PROGRAMS); do \
-	  install -m 0755 $$prog $(prefix)/bin; \
+	  install -m 0755 $$prog $(PREFIX)/bin; \
 	done
+
+# simple debug function
+print-%:
+	@echo $*=$($*)
 
 .PHONY: install
