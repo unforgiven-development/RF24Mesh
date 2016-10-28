@@ -11,6 +11,7 @@
 # You can change the install directory by editing the LIB_DIR line
 #
 
+## source configuration from the RF24 project's __Makefile.inc__ if possible ##
 REL_RF24_MAKEFILE_INC="../RF24/Makefile.inc"
 RF24_MAKEFILE_INC=$(shell echo "$$(cd "$$(dirname "$(REL_RF24_MAKEFILE_INC)")"; pwd)/$$(basename "$(REL_RF24_MAKEFILE_INC)")")
 
