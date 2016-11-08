@@ -13,7 +13,6 @@
  * Network/Mesh Response Types
  * The network will determine whether to automatically acknowledge payloads based on their type
  * RF24Mesh uses pre-defined system types for interacting with RF24Network at the system level
- *
  */
 
 // Network ACK types 
@@ -30,7 +29,6 @@
  * @file RF24Mesh.h
  *
  * Class declaration for RF24Mesh
- *
  */
 
 #if defined (__AVR_ATtiny85__) || defined (__AVR_ATtiny84__)
@@ -94,8 +92,14 @@ public:
 	/**
 	 * Very similar to network.update(), it needs to be called regularly to keep the network
 	 * and the mesh going.
+	 *
+	 * Additionally, it now updates the "lastTime" field of the mesh addrList (NOTE: this
+	 * only applies to the master node)
 	 */
 	uint8_t update();
+
+	/* Remove a nodeID from the meshlist*/
+	bool remove(int16_t nodeID);
 
   /**
    * Automatically construct a header and send a payload
@@ -237,8 +241,9 @@ public:
   
 #if !defined RF24TINY  
   typedef struct{
-	uint8_t nodeID;       /**< NodeIDs and addresses are stored in the addrList array using this structure */
-	uint16_t address;  /**< NodeIDs and addresses are stored in the addrList array using this structure */
+	uint8_t nodeID;       	/**< NodeIDs and addresses are stored in the addrList array using this structure */
+	uint16_t address;  	/**< NodeIDs and addresses are stored in the addrList array using this structure */
+	uint32_t lastTime; 	/**< Time in millis of last node activity */
   }addrListStruct;
   
   // Pointer used for dynamic memory allocation of address list
@@ -265,6 +270,7 @@ public:
   bool requestAddress(uint8_t level); /**< Actual requesting of the address once a contact node is discovered or supplied **/
   bool waitForAvailable(uint32_t timeout); /**< Waits for data to become available */
   bool doDHCP; /**< Indicator that an address request is available */
+  bool updateNodeTime(int16_t nodeID);
   uint32_t lastSaveTime;
   uint32_t lastFileSave;
   uint8_t radio_channel;
