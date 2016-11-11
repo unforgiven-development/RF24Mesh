@@ -1,4 +1,9 @@
 /*
+ * RF24Mesh -- examples_RPi/ncurses/RF24Mesh_Ncurses_Master.cpp
+ *
+ * (c) 2016 Gerad Munsch <gmunsch@unforgivendevelopment.com>
+ * (c) 2014 TMRh20
+ *
  * RF24Mesh Master Node Monitoring Tool
  * This is a generic tool for master nodes running RF24Mesh that will display address
  * assignments, and information regarding incoming data, regardless of the specific
@@ -26,7 +31,7 @@
 
 RF24 radio(RPI_V2_GPIO_P1_15, BCM2835_SPI_CS0, BCM2835_SPI_SPEED_8MHZ);  
 RF24Network network(radio);
-RF24Mesh mesh(radio,network);
+RF24Mesh mesh(radio, network);
 
 void printNodes(uint8_t boldID);
 void pingNode(uint8_t listNo);
@@ -36,19 +41,20 @@ uint8_t nodeCounter;
 uint16_t failID = 0;
 
 int main() {
-	printf("Establishing mesh...\n");
-	mesh.setNodeID(0);
-	mesh.begin();
-	radio.printDetails();
+  printf("Establishing mesh...\n");
+  mesh.setNodeID(0);
+  mesh.begin();
+  radio.printDetails();
 
-	initscr();			/* Start curses mode */
-	start_color();
-	curs_set(0);
-	//keypad(stdscr, TRUE); //Enable user interaction
-	init_pair(1, COLOR_GREEN, COLOR_BLACK);
-	init_pair(2, COLOR_RED, COLOR_BLACK);
-	attron(COLOR_PAIR(1));
-	printw("RF24Mesh Master Node Monitoring Interface by TMRh20 - 2014\n");
+  /* start curses mode */
+  initscr();
+  start_color();
+  curs_set(0);
+  //keypad(stdscr, TRUE); // enable user interaction
+  init_pair(1, COLOR_GREEN, COLOR_BLACK);
+  init_pair(2, COLOR_RED, COLOR_BLACK);
+  attron(COLOR_PAIR(1));
+  printw("RF24Mesh Master Node Monitoring Interface by TMRh20 - 2014\n");
 	attroff(COLOR_PAIR(1));
 	refresh();			/* Print it on to the real screen */
 	

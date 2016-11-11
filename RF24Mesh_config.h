@@ -1,3 +1,8 @@
+/*
+ * RF24Mesh -- RF24Mesh_config.h
+ *
+ */
+
 #ifndef __RF24MESH_CONFIG_H__
 	#define __RF24MESH_CONFIG_H__
 
